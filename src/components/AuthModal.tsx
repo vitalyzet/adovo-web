@@ -9,7 +9,10 @@ import {
   updateProfile 
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { X, Mail, Lock, User, Eye, EyeOff, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { 
+  X, Mail, Lock, User, Eye, EyeOff, Loader2, CheckCircle2, AlertCircle, 
+  ShieldCheck, Zap, MessageSquare, Sparkles 
+} from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -73,7 +76,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register' }:
     }
 
     if (password !== confirmPassword) {
-      setError('Parolele introduse nu potrivesc.');
+      setError('Parolele introduse nu se potrivesc.');
       return;
     }
 
@@ -146,69 +149,104 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register' }:
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/75 backdrop-blur-md animate-in fade-in duration-200">
       
-      {/* Modal Container */}
+      {/* Horizontal Split Modal Container */}
       <div 
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100 relative animate-in zoom-in-95 duration-200"
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden border border-slate-800/20 relative flex flex-col md:flex-row animate-in zoom-in-95 duration-200 min-h-[520px]"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-5 right-5 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-800 flex items-center justify-center transition-colors z-10 cursor-pointer"
+          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition-colors z-20 cursor-pointer"
+          aria-label="Închide"
         >
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Header */}
-        <div className="pt-8 px-8 pb-4 text-center">
-          <span className="text-3xl font-black tracking-tighter text-slate-900 block mb-2">
-            adovo
-          </span>
-          <h3 className="text-xl font-bold text-gray-900">
-            {mode === 'register' ? 'Creează un cont nou' : 'Bine ai revenit!'}
-          </h3>
-          <p className="text-xs text-gray-500 mt-1">
-            {mode === 'register' 
-              ? 'Alătură-te celei mai mari comunități de anunțuri din România' 
-              : 'Introdu datele tale pentru a te conecta la cont'}
-          </p>
+        {/* LEFT PANEL: Horizontal Branding & Features */}
+        <div className="w-full md:w-5/12 bg-gradient-to-br from-[#0b101b] via-[#0f172a] to-[#064e3b] p-8 text-white flex flex-col justify-between relative overflow-hidden">
+          
+          {/* Subtle decorative mesh blur circles */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none"></div>
+
+          <div className="relative z-10">
+            <span className="text-3xl font-black tracking-tighter text-white block mb-6">
+              adovo
+            </span>
+            
+            <h2 className="text-xl font-bold tracking-tight text-white mb-2 leading-snug">
+              {mode === 'register' ? 'Alătură-te comunității Adovo' : 'Bine ai revenit pe Adovo'}
+            </h2>
+            <p className="text-xs text-slate-300 leading-relaxed mb-6 font-normal">
+              Marketplace-ul tău de încredere pentru produse noi și second-hand în România.
+            </p>
+
+            {/* Feature Highlights */}
+            <div className="space-y-4 text-xs font-medium text-slate-200">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                  <Zap className="w-4 h-4" />
+                </div>
+                <span>Anunțuri gratuite în doar câteva secunde</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <span>Cumpărături și tranzacții sigure</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                  <MessageSquare className="w-4 h-4" />
+                </div>
+                <span>Contact direct și rapid cu vânzătorii</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Live Stats Badge */}
+          <div className="relative z-10 mt-8 pt-4 border-t border-slate-800/80 flex items-center gap-2 text-[11px] text-slate-400 font-medium">
+            <Sparkles className="w-4 h-4 text-emerald-400" />
+            <span>3.500+ anunțuri active • 700+ utilizatori</span>
+          </div>
         </div>
 
-        {/* Tabs Switcher */}
-        <div className="mx-8 mb-6 p-1 bg-gray-100 rounded-xl flex text-xs font-semibold">
-          <button
-            type="button"
-            onClick={() => { setMode('register'); setError(null); setSuccess(null); }}
-            className={`flex-1 py-2.5 rounded-lg transition-all ${
-              mode === 'register' 
-                ? 'bg-white text-slate-900 shadow-sm font-bold' 
-                : 'text-gray-500 hover:text-gray-900'
-            }`}
-          >
-            Creează cont
-          </button>
-          <button
-            type="button"
-            onClick={() => { setMode('login'); setError(null); setSuccess(null); }}
-            className={`flex-1 py-2.5 rounded-lg transition-all ${
-              mode === 'login' 
-                ? 'bg-white text-slate-900 shadow-sm font-bold' 
-                : 'text-gray-500 hover:text-gray-900'
-            }`}
-          >
-            Autentificare
-          </button>
-        </div>
+        {/* RIGHT PANEL: Form Inputs */}
+        <div className="w-full md:w-7/12 p-8 sm:p-10 flex flex-col justify-center bg-white relative">
 
-        {/* Form Container */}
-        <div className="px-8 pb-8">
+          {/* Tabs Switcher */}
+          <div className="mb-6 p-1 bg-slate-100 rounded-xl flex text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => { setMode('register'); setError(null); setSuccess(null); }}
+              className={`flex-1 py-2.5 rounded-lg transition-all cursor-pointer ${
+                mode === 'register' 
+                  ? 'bg-white text-slate-900 shadow-sm font-bold' 
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              Creează cont
+            </button>
+            <button
+              type="button"
+              onClick={() => { setMode('login'); setError(null); setSuccess(null); }}
+              className={`flex-1 py-2.5 rounded-lg transition-all cursor-pointer ${
+                mode === 'login' 
+                  ? 'bg-white text-slate-900 shadow-sm font-bold' 
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              Autentificare
+            </button>
+          </div>
 
           {/* Success Banner */}
           {success && (
-            <div className="mb-5 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-medium flex items-center gap-2.5">
+            <div className="mb-5 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-medium flex items-center gap-2.5 animate-in fade-in">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
               <span>{success}</span>
             </div>
@@ -216,7 +254,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register' }:
 
           {/* Error Banner */}
           {error && (
-            <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-medium flex items-center gap-2.5">
+            <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-medium flex items-center gap-2.5 animate-in fade-in">
               <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -227,18 +265,18 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register' }:
             {/* Name input (Only for registration) */}
             {mode === 'register' && (
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Nume și prenume
                 </label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ex: Alexandru Popescu"
-                    className="w-full pl-10 pr-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-gray-900"
+                    className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-slate-900"
                   />
                 </div>
               </div>
@@ -246,85 +284,108 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register' }:
 
             {/* Email input */}
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Adresă de Email
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="nume@example.com"
-                  className="w-full pl-10 pr-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-gray-900"
+                  className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-slate-900"
                 />
               </div>
             </div>
 
-            {/* Password input */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-gray-700">
-                  Parolă
-                </label>
-                {mode === 'login' && (
+            {/* Password Grid (2 Columns for register, 1 Column for login) */}
+            {mode === 'register' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Parolă
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full pl-10 pr-9 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-slate-900"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Confirmă parola
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-slate-900"
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-slate-700">
+                    Parolă
+                  </label>
                   <a href="#" className="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700">
                     Ai uitat parola?
                   </a>
-                )}
-              </div>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-10 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-gray-900"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Confirm Password input (Only for registration) */}
-            {mode === 'register' && (
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">
-                  Confirmă parola
-                </label>
+                </div>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type={showPassword ? "text" : "password"}
                     required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-gray-900"
+                    className="w-full pl-10 pr-10 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all text-slate-900"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
             )}
 
             {/* Terms checkbox */}
             {mode === 'register' && (
-              <div className="flex items-start gap-2.5 pt-1">
+              <div className="flex items-start gap-2 pt-1">
                 <input
                   type="checkbox"
                   id="terms"
                   checked={termsAccepted}
                   onChange={(e) => setTermsAccepted(e.target.checked)}
-                  className="mt-0.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 h-4 w-4"
+                  className="mt-0.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 h-4 w-4"
                 />
-                <label htmlFor="terms" className="text-[11px] text-gray-600 leading-tight">
+                <label htmlFor="terms" className="text-[11px] text-slate-600 leading-tight">
                   Sunt de acord cu <a href="#" className="text-emerald-600 font-bold hover:underline">Termenii și Condițiile</a> și <a href="#" className="text-emerald-600 font-bold hover:underline">Politica de Confidențialitate</a>.
                 </label>
               </div>
@@ -334,7 +395,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register' }:
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#059669] hover:bg-emerald-600 text-white font-bold text-sm rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
+              className="w-full py-3 bg-[#059669] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer flex items-center justify-center gap-2 mt-3"
             >
               {loading ? (
                 <>
@@ -348,12 +409,12 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register' }:
           </form>
 
           {/* Social Auth Divider */}
-          <div className="relative my-6">
+          <div className="relative my-5">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
+              <div className="w-full border-t border-slate-200"></div>
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="px-3 bg-white text-gray-400 font-medium">sau continuă cu</span>
+              <span className="px-3 bg-white text-slate-400 font-medium">sau continuă cu</span>
             </div>
           </div>
 
@@ -362,10 +423,10 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register' }:
             type="button"
             onClick={handleGoogleSignIn}
             disabled={googleLoading}
-            className="w-full py-2.5 px-4 bg-white hover:bg-gray-50 border border-gray-200 rounded-xl text-gray-700 font-semibold text-xs transition-colors flex items-center justify-center gap-3 cursor-pointer shadow-2xs"
+            className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-3 cursor-pointer shadow-2xs"
           >
             {googleLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
+              <Loader2 className="w-4 h-4 animate-spin text-slate-500" />
             ) : (
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
