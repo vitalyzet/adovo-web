@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
@@ -33,6 +33,15 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register' }:
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Sync mode whenever modal opens or initialMode prop changes
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+      setError(null);
+      setSuccess(null);
+    }
+  }, [isOpen, initialMode]);
 
   if (!isOpen) return null;
 
